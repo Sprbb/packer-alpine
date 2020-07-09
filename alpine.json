@@ -34,16 +34,15 @@
       "hard_drive_interface": "sata",
       "headless": false,
       "http_directory": "http",
-      "iso_checksum": "{{user `iso_checksum`}}",
-      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
       "iso_urls": [
         "{{user `iso_local_url`}}",
         "{{user `iso_download_url`}}"
       ],
       "shutdown_command": "echo {{user `ssh_password`}} | sudo -S /sbin/poweroff",
       "ssh_password": "{{user `ssh_password`}}",
+      "ssh_timeout": "10m",
       "ssh_username": "{{user `ssh_username`}}",
-      "ssh_wait_timeout": "10m",
       "type": "virtualbox-iso",
       "vboxmanage": [
         [
