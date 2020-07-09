@@ -1,49 +1,9 @@
 {
-  "description": "Build base Alpine Linux x86_64",
-  "variables": {
-    "vm_name": "alpine-3.11.2-x86_64",
-    "cpus": "1",
-    "memory": "1024",
-    "disk_size": "10240",
-    "iso_local_url": "../../iso/alpine-virt-3.11.2-x86_64.iso",
-    "iso_download_url": "http://dl-cdn.alpinelinux.org/alpine/v3.11/releases/x86_64/alpine-virt-3.11.2-x86_64.iso",
-    "iso_checksum": "fbedd5fa113eee18876c293177d251b851bfe496a78b080b13e30ba1fd184bb2",
-    "iso_checksum_type": "sha256",
-    "root_password": "letmein!1234",
-    "ssh_username": "vagrant",
-    "ssh_password": "letmein!1234"
-  },
-  "provisioners": [
-    {
-      "type": "shell",
-      "inline": "mkdir .ssh; cd .ssh; echo ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key > authorized_keys; echo vagrant insecure ssh key added!"
-    }
-  ],
   "builders": [
     {
-      "type": "virtualbox-iso",
-      "headless": false,
-      "vm_name": "{{user `vm_name`}}",
-      "format": "ova",
-      "guest_os_type": "Linux26_64",
-      "guest_additions_mode": "disable",
-      "disk_size": "{{user `disk_size`}}",
-      "iso_urls": [
-        "{{user `iso_local_url`}}",
-        "{{user `iso_download_url`}}"
-      ],
-      "iso_checksum": "{{user `iso_checksum`}}",
-      "iso_checksum_type": "{{user `iso_checksum_type`}}",
-      "http_directory": "http",
-      "communicator": "ssh",
-      "ssh_username": "{{user `ssh_username`}}",
-      "ssh_password": "{{user `ssh_password`}}",
-      "ssh_wait_timeout": "10m",
-      "shutdown_command": "echo {{user `ssh_password`}} | sudo -S /sbin/poweroff",
-      "boot_wait": "30s",
       "boot_command": [
         "root<enter><wait>",
-        "ifconfig eth0 up && udhcpc -i eth0<enter><wait10>",
+        "ifconfig eth0 up \u0026\u0026 udhcpc -i eth0<enter><wait10>",
         "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/answers<enter><wait>",
         "setup-alpine -f $PWD/answers<enter><wait5>",
         "{{user `root_password`}}<enter><wait>",
@@ -65,7 +25,26 @@
         "apk add virtualbox-guest-additions virtualbox-guest-modules-virt<enter>",
         "<wait10><wait10><wait10>"
       ],
+      "boot_wait": "30s",
+      "communicator": "ssh",
+      "disk_size": "{{user `disk_size`}}",
+      "format": "ova",
+      "guest_additions_mode": "disable",
+      "guest_os_type": "Linux26_64",
       "hard_drive_interface": "sata",
+      "headless": false,
+      "http_directory": "http",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_urls": [
+        "{{user `iso_local_url`}}",
+        "{{user `iso_download_url`}}"
+      ],
+      "shutdown_command": "echo {{user `ssh_password`}} | sudo -S /sbin/poweroff",
+      "ssh_password": "{{user `ssh_password`}}",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_wait_timeout": "10m",
+      "type": "virtualbox-iso",
       "vboxmanage": [
         [
           "modifyvm",
@@ -85,7 +64,29 @@
           "--rtcuseutc",
           "on"
         ]
-      ]
+      ],
+      "vm_name": "{{user `vm_name`}}"
     }
-  ]
+  ],
+  "description": "Build base Alpine Linux x86_64",
+  "provisioners": [
+    {
+      "inline": "mkdir .ssh; cd .ssh; echo ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key > authorized_keys; echo vagrant insecure ssh key added!",
+      "type": "shell"
+    }
+  ],
+  "variables": {
+    "cpus": "1",
+    "disk_size": "10240",
+    "iso_checksum": "fbedd5fa113eee18876c293177d251b851bfe496a78b080b13e30ba1fd184bb2",
+    "iso_checksum_type": "sha256",
+    "iso_download_url": "http://dl-cdn.alpinelinux.org/alpine/v3.11/releases/x86_64/alpine-virt-3.11.2-x86_64.iso",
+    "iso_local_url": "../../iso/alpine-virt-3.11.2-x86_64.iso",
+    "memory": "1024",
+    "root_password": "letmein!1234",
+    "ssh_password": "letmein!1234",
+    "ssh_username": "vagrant",
+    "vm_name": "alpine-3.11.2-x86_64"
+  }
 }
+
